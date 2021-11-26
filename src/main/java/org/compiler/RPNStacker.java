@@ -1,65 +1,45 @@
 package org.compiler;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Stack;
 
+import org.token.Token;
+import org.token.TokenType;
+
 public  class RPNStacker {
-    public static void main(String[] args) throws FileNotFoundException {
+    public void evaluateExpression(ArrayList<Token> tokensList, String fileName) {
         Stack<Integer> stack = new Stack<>();
 
-        File entriesPath = getEntries();
-        File[] entries = entriesPath.listFiles();
-        
-        for (File file : entries) {
-            Scanner entry = new Scanner(file);
-            
-            while(entry.hasNext()){
-                if(entry.hasNextInt()){
-                    stack.push(entry.nextInt());
-                } else {
-                    char operator = entry.next().charAt(0);
-                    
+        if(tokensList != null){
+            for (Token token : tokensList) {
+                if (token.type == TokenType.NUM)
+                    stack.push(Integer.parseInt(token.lexeme));
+                else {
+                    TokenType operator = token.type;
                     int operandR = stack.pop();
                     int operandL = stack.pop();
-
-                    stack.push(evaluateExpression(operandL, operandR, operator));
-                }                
+                    stack.push(evaluateOparation(operandL, operandR, operator));
+                }
             }
-
-            System.out.println("Resultado da expressão no arquivo " + file.getName() + ": " + stack.pop());
-            entry.close();
-        }
+    
+            System.out.println("Resultado da expressão " + fileName + ": " + stack.pop());
+        }           
+        System.out.println("--------------------------------");
     }
-
-    private static Integer evaluateExpression(int left, int right, char operator) {
+    
+    private static Integer evaluateOparation(int left, int right, TokenType operator) {
         switch(operator){
-            case '+':
+            case PLUS:
                 return left + right;
-            case '-':
+            case MINUS:
                 return left - right;
-            case '*':
+            case STAR:
                 return left * right;
-            case '/':
+            case SLASH:
                 return left / right;
             default:
                 return null;
         }
-    }
-
-    private static File getEntries() {
-        URL url = RPNStacker.class.getClassLoader().getResource("entries");
-        File file = null;
-
-        try {
-            file = new File(url.toURI());
-        } catch (Exception e) {
-            file = new File(url.getPath());
-        }
-
-        return file;
     }
 
 }
