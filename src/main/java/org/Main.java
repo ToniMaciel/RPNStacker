@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.compiler.RPNStacker;
+import org.interpreter.Interpreter;
 import org.scanner.Scanner;
 import org.token.Token;
 
@@ -17,8 +18,9 @@ public class Main {
         File[] entries = entriesPath.listFiles();
         
         for (File file : entries) {
-            ArrayList<Token> tokensList = Scanner.scanning(file);
-            stacker.evaluateExpression(tokensList, file.getName());
+            Interpreter interpreter = new Interpreter();
+            ArrayList<Token> tokensList = Scanner.scanning(file, interpreter);
+            stacker.evaluateExpression(tokensList, interpreter, file.getName());
         }
     }
 }

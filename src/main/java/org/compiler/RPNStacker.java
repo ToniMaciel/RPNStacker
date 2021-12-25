@@ -3,18 +3,21 @@ package org.compiler;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import org.interpreter.Interpreter;
 import org.token.Token;
 import org.token.TokenType;
 
 public  class RPNStacker {
-    public void evaluateExpression(ArrayList<Token> tokensList, String fileName) {
+    public void evaluateExpression(ArrayList<Token> tokensList, Interpreter interpreter, String fileName) {
         Stack<Integer> stack = new Stack<>();
 
         if(tokensList != null){
             for (Token token : tokensList) {
                 if (token.type == TokenType.NUM)
                     stack.push(Integer.parseInt(token.lexeme));
-                else {
+                else if (token.type == TokenType.ID){
+                    stack.push(interpreter.getID(token.lexeme));
+                } else {
                     TokenType operator = token.type;
                     int operandR = stack.pop();
                     int operandL = stack.pop();
