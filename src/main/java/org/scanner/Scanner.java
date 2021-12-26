@@ -33,15 +33,15 @@ public class Scanner {
                     return null;
                 }
             } else if (line.matches("^[a-z,A-Z]+[0-9]*")){
-                int exists = interpreter.getID(line);
+                int value = interpreter.getID(line);
 
-                if(exists == -1){
+                if(value == -1){
                     raiseScanError((lineNumber + 1), file.getName(), line);
                     br.close();
                     return null;
                 }
                 else{
-                    tokensList.add(new Token(TokenType.ID, line));
+                    tokensList.add(new Token(TokenType.ID, Integer.toString(value)));
                 }
             } else {
                 raiseScanError((lineNumber + 1), file.getName(), line);

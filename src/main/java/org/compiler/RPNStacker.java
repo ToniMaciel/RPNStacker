@@ -13,11 +13,9 @@ public  class RPNStacker {
 
         if(tokensList != null){
             for (Token token : tokensList) {
-                if (token.type == TokenType.NUM)
+                if (token.type == TokenType.NUM || token.type == TokenType.ID)
                     stack.push(Integer.parseInt(token.lexeme));
-                else if (token.type == TokenType.ID){
-                    stack.push(interpreter.getID(token.lexeme));
-                } else {
+                else {
                     TokenType operator = token.type;
                     int operandR = stack.pop();
                     int operandL = stack.pop();
